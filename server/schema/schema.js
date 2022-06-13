@@ -137,6 +137,36 @@ const Mutations = new GraphQLObjectType({
                 });
                 return book.save();
             }
+        },
+        removeBook:{
+            type:BookType,
+            args:{
+                id:{type: GraphQLID}
+            },
+            resolve(parent,args){
+                // console.log('Find By IDDD',args);
+                return Book.findByIdAndDelete(args.id);
+            }
+
+        },
+        updateBook:{
+            type:BookType,
+            args:{
+                id:{type:GraphQLID},
+                name:{type:GraphQLString},
+                genre:{type:GraphQLString}
+            },
+            async resolve(parent,args){
+             try {
+                    const response = await Book.findByIdAndUpdate(args.id, { name: args.name, genre: args.genre }, { new: true });
+                    // console.log('REsponseee ssss', response);
+                    return response;
+                } catch (error) {
+                    console.log('Erroorrr', error);
+                    return error;
+                }
+                
+            }
         }
     }
 })
